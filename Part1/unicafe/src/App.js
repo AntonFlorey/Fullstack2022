@@ -19,14 +19,51 @@ const Feedback = ({header, buttons}) => {
   )
 }
 
+const StatisticLine = ({text, data, type="number"}) => {
+  if (type == "percentage"){
+    return (
+      <div>
+      {text}: {data}% <br />
+      </div>
+    )
+  }
+  return (
+    <div>
+    {text}: {data} <br />
+    </div>
+  )
+} 
+
 const Stats = ({text, good, neutral, bad}) => {
+  let num = good + neutral + bad
+  if (num == 0){
+    return (
+      <>
+      <h1>{text}</h1>
+      <p>no feedback has been given yet</p>
+      </>
+    )
+  }
+
+  const compute_avg_score = () => {
+    if (num == 0) {return(0)}
+    return ((good - bad) / (good + bad + neutral))
+  }
+  const compute_pos_rate = () => {
+    if (num == 0) {return(0)}
+    return (100 * good / (good + bad + neutral))
+  }
+
   return (
     <>
     <h1> {text} </h1>
     <p>
-      good: {good} <br />
-      neutral: {neutral} <br />
-      bad: {bad} 
+      <StatisticLine text="good" data={good}/>
+      <StatisticLine text="neutral" data={neutral}/>
+      <StatisticLine text="bad" data={bad}/>
+      <StatisticLine text="num votes" data={num}/>
+      <StatisticLine text="avg score" data={compute_avg_score()}/>
+      <StatisticLine text="positive ratio" data={compute_pos_rate()} type="percentage" />
     </p>
     </>
   )
@@ -38,7 +75,8 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
-  const incGood = () => {setGood(good + 1)}
+  const incGood = () => {setGood(good + 1)
+  }
   const incNeutral = () => {setNeutral(neutral + 1)}
   const incBad = () => {setBad(bad + 1)}
 
