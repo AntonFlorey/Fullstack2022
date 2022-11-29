@@ -20,7 +20,7 @@ const Feedback = ({header, buttons}) => {
 }
 
 const StatisticLine = ({text, data, type="number"}) => {
-  if (type == "percentage"){
+  if (type === "percentage"){
     return (
       <tr>
         <td>{text}:</td> 
@@ -38,7 +38,7 @@ const StatisticLine = ({text, data, type="number"}) => {
 
 const Stats = ({text, good, neutral, bad}) => {
   let num = good + neutral + bad
-  if (num == 0){
+  if (num === 0){
     return (
       <>
       <h1>{text}</h1>
@@ -48,11 +48,11 @@ const Stats = ({text, good, neutral, bad}) => {
   }
 
   const compute_avg_score = () => {
-    if (num == 0) {return(0)}
+    if (num === 0) {return(0)}
     return ((good - bad) / (good + bad + neutral))
   }
   const compute_pos_rate = () => {
-    if (num == 0) {return(0)}
+    if (num === 0) {return(0)}
     return (100 * good / (good + bad + neutral))
   }
 
