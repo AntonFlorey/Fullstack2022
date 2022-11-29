@@ -22,15 +22,17 @@ const Feedback = ({header, buttons}) => {
 const StatisticLine = ({text, data, type="number"}) => {
   if (type == "percentage"){
     return (
-      <div>
-      {text}: {data}% <br />
-      </div>
+      <tr>
+        <td>{text}:</td> 
+        <td>{data}%</td>  
+      </tr>
     )
   }
   return (
-    <div>
-    {text}: {data} <br />
-    </div>
+    <tr>
+        <td>{text}:</td> 
+        <td>{data}</td>  
+      </tr>
   )
 } 
 
@@ -58,12 +60,14 @@ const Stats = ({text, good, neutral, bad}) => {
     <>
     <h1> {text} </h1>
     <p>
-      <StatisticLine text="good" data={good}/>
-      <StatisticLine text="neutral" data={neutral}/>
-      <StatisticLine text="bad" data={bad}/>
-      <StatisticLine text="num votes" data={num}/>
-      <StatisticLine text="avg score" data={compute_avg_score()}/>
-      <StatisticLine text="positive ratio" data={compute_pos_rate()} type="percentage" />
+      <table>
+        <StatisticLine text="good" data={good}/>
+        <StatisticLine text="neutral" data={neutral}/>
+        <StatisticLine text="bad" data={bad}/>
+        <StatisticLine text="num votes" data={num}/>
+        <StatisticLine text="avg score" data={compute_avg_score()}/>
+        <StatisticLine text="positive ratio" data={compute_pos_rate()} type="percentage" />
+      </table>
     </p>
     </>
   )
