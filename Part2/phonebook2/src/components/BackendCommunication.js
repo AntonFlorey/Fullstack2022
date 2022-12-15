@@ -6,23 +6,29 @@ const GetServerData = (adress, ResponseHandler) => {
     })
 }
 
-const UpdateServerData = (adress, data, ResponseHandler) => {
+const UpdateServerData = (adress, data, ResponseHandler, ErrorHandler) => {
     axios.post(adress, data).then(response => {
         ResponseHandler(response)
+    }).catch(err => {
+        ErrorHandler(err)
     })
 }
 
-const DeleteServerData = (adress, id, ResponseHander, deleteMSG) => {
+const DeleteServerData = (adress, id, ResponseHander, deleteMSG, ErrorHandler) => {
     if (window.confirm(deleteMSG)){
         axios.delete(adress + String(id)).then(response => {
             ResponseHander(response)
+        }).catch(err => {
+            ErrorHandler(err)
         })
     }
 }
 
-const PutServerData = (adress, data, ResponseHandler) => {
+const PutServerData = (adress, data, ResponseHandler, ErrorHandler) => {
     axios.put(adress, data).then(response => {
         ResponseHandler(response)
+    }).catch(err => {
+        ErrorHandler(err)
     })
 }
 

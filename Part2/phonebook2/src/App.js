@@ -1,6 +1,19 @@
 import { useState, useEffect, useSyncExternalStore} from 'react'
 import axios from 'axios'
 import {GetServerData, UpdateServerData, DeleteServerData, PutServerData} from "./components/BackendCommunication"
+import "./index.css"
+
+const Notification = ({ message, className}) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className={className}>
+      {message}
+    </div>
+  )
+}
 
 const PhonebookEntry = ({person, delFun}) => {
   const onButton = () => {
@@ -52,8 +65,16 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNum, setNum] = useState('')
   const [filterString, setFilter] = useState('')
+  const [message, setMessage] = useState([null, "message"])
 
   const filteredPersons = filterString === '' ? persons : persons.filter(p => p.name.toLowerCase().includes(filterString.toLowerCase()))
+
+  const showNotification = (msg) => {
+    setMessage(msg)
+    setTimeout(() => {
+      setMessage([null, "message"])
+    }, 5000)
+  }
 
   useEffect(() => {
     console.log('effect')
@@ -62,7 +83,6 @@ const App = () => {
 
   const addContact = (event) => {
     event.preventDefault()
-
     if (newName === ""){
       window.alert("Name must not be empty!")
       return
@@ -74,9 +94,12 @@ const App = () => {
         console.log("name already existing")
         if (window.confirm("Replace existing number?")){
           PutServerData("http://localhost:3001/persons/" + String(p.id), data, rsp => {
+          showNotification([`Successfully changed ${data.name}'s number to ${data.number}`, "message"])
           setNewName('') 
           setNum('')
           GetServerData('http://localhost:3001/persons', r => {setPersons(r.data)})
+        }, error => {
+          showNotification([`Could not change ${data.name}'s number!`, "error"])
         })
         }
         abort = true
@@ -85,15 +108,23 @@ const App = () => {
     if (abort) {return}
     UpdateServerData("http://localhost:3001/persons", data, r => {
       setPersons(persons.concat(r.data))
+      showNotification([`Successfully added ${data.name}`, "message"])
       setNewName('') 
       setNum('')
+    }, error => {
+      showNotification([`Could not add ${data.name}'s number!`, "error"])
     })
   }
   
   const deleteContact = (id, name) => {
-    DeleteServerData("http://localhost:3001/persons/", id, r => {
+    DeleteServerData("http://localhost:3001/persons/", id, 
+    r => {
       setPersons(persons.filter(p => {return (p.id !== id)}))
-    }, `Make ${name} no more?`)
+      showNotification([name + " is no more", "message"])
+    }, `Make ${name} no more?`,
+    error => {
+      showNotification(["An error occured while deleting " + name, "error"])
+    })
   }
 
   const handleNameChange = (event) => {
@@ -109,6 +140,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={message[0]} className={message[1]} />
       <Filter filterstring={filterString} filterChangefunc={handleFilterChange} />
       <PersonForm addContact={addContact} newName={newName} handleNameChange={handleNameChange} newNum={newNum} handleNumChange={handleNumChange} />
       <h2>Contact List</h2>
