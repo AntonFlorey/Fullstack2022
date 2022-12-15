@@ -1,12 +1,17 @@
 import { useState, useEffect, useSyncExternalStore} from 'react'
 import axios from 'axios'
+import {GetServerData, UpdateServerData, DeleteServerData, PutServerData} from "./components/BackendCommunication"
 
-const PhonebookEntry = ({person}) => {
+const PhonebookEntry = ({person, delFun}) => {
+  const onButton = () => {
+    delFun(person.id, person.name) 
+  }
   return(
     <>
       <tr>
         <td>{person.name}</td>
         <td>{person.number}</td>
+        <td><button onClick={onButton}>delete</button></td>
       </tr>
     </>
   )
@@ -52,15 +57,8 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/db')
-      .then(response => {
-        console.log(response.data)
-        setPersons(response.data.persons)
-      })
+    GetServerData('http://localhost:3001/persons', r => {setPersons(r.data)})
   }, [])
-
-  console.log('book has', persons.length, 'entries')
 
   const addContact = (event) => {
     event.preventDefault()
@@ -69,32 +67,42 @@ const App = () => {
       window.alert("Name must not be empty!")
       return
     }
+    const data = {name: newName, number: newNum}
     let abort = false
     persons.forEach((p => {
-      if (p.name === newName)
+      if (p.name === newName){
+        console.log("name already existing")
+        if (window.confirm("Replace existing number?")){
+          PutServerData("http://localhost:3001/persons/" + String(p.id), data, rsp => {
+          setNewName('') 
+          setNum('')
+          GetServerData('http://localhost:3001/persons', r => {setPersons(r.data)})
+        })
+        }
         abort = true
-      }))
-    if (abort) {
-      window.alert(`${newName} is already added to phonebook`)
-      return
-    }
-    const new_val = {name: newName, number: newNum, id: persons.length+1}
-    setPersons(persons.concat(new_val))
-    console.log("contact added")
-    setNewName('') 
-    setNum('')
+      }
+    }))
+    if (abort) {return}
+    UpdateServerData("http://localhost:3001/persons", data, r => {
+      setPersons(persons.concat(r.data))
+      setNewName('') 
+      setNum('')
+    })
   }
   
+  const deleteContact = (id, name) => {
+    DeleteServerData("http://localhost:3001/persons/", id, r => {
+      setPersons(persons.filter(p => {return (p.id !== id)}))
+    }, `Make ${name} no more?`)
+  }
+
   const handleNameChange = (event) => {
-    console.log(event.target.value)
     setNewName(event.target.value)
   }
   const handleNumChange = (event) => {
-    console.log(event.target.value)
     setNum(event.target.value)
   }
   const handleFilterChange = (event) => {
-    console.log(event.target.value)
     setFilter(event.target.value)
   }
 
@@ -106,7 +114,7 @@ const App = () => {
       <h2>Contact List</h2>
       <table>
         <tbody>
-        {filteredPersons.map(p => <PhonebookEntry person={p} key={p.id}/>)}
+        {filteredPersons.map(p => <PhonebookEntry person={p} key={p.id} delFun={deleteContact} />)}
         </tbody>
       </table>
     </div>
