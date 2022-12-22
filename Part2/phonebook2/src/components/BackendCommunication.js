@@ -16,7 +16,7 @@ const UpdateServerData = (adress, data, ResponseHandler, ErrorHandler) => {
 
 const DeleteServerData = (adress, id, ResponseHander, deleteMSG, ErrorHandler) => {
     if (window.confirm(deleteMSG)){
-        axios.delete(adress + String(id)).then(response => {
+        axios.delete(adress + "/" + String(id)).then(response => {
             ResponseHander(response)
         }).catch(err => {
             ErrorHandler(err)
@@ -24,8 +24,8 @@ const DeleteServerData = (adress, id, ResponseHander, deleteMSG, ErrorHandler) =
     }
 }
 
-const PutServerData = (adress, data, ResponseHandler, ErrorHandler) => {
-    axios.put(adress, data).then(response => {
+const PutServerData = (adress, id, data, ResponseHandler, ErrorHandler) => {
+    axios.put(adress + "/" + String(id), data).then(response => {
         ResponseHandler(response)
     }).catch(err => {
         ErrorHandler(err)

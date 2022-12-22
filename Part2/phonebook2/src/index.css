@@ -1,24 +1,105 @@
-h1 {
-    color: green;
-    font-style: italic;
+/* @import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow&family=Rubik+Mono+One&display=swap');
+
+* {
+  box-sizing: border-box;
+  font-family: 'Archivo Narrow', sans-serif;
+}
+
+#minttu {
+  color: rgb(20, 168, 179);
+  font-style: italic;
+  text-shadow: 
+  -2px 2px 1px rgb(13, 110, 117),
+  -4px 4px 1px rgb(22, 190, 202),
+  -7px 7px 1px rgb(32, 237, 252); 
+  position: relative;
+  animation: minttuswag 1s linear;
+  animation-delay: 0s;
+}
+
+#pb {
+  font-family: 'Rubik Mono One', sans-serif; 
+  color: rgb(228, 137, 190);
+  text-shadow: 4px 4px 2px rgb(99, 1, 102),
+                 6px 6px 2px rgb(143, 2, 148),
+                 10px 10px 2px rgb(212, 4, 219); 
+  animation: minttubounce 0.5s;
+  position: relative;
+  animation-delay: 1s;
+}
+
+h1{
+    font-family: 'Rubik Mono One', sans-serif;
+    text-align: center;
+    margin-top: 0; 
   }
 
+h2 {
+  color: rgb(20, 168, 179);
+  text-shadow: 5px 5px 1px rgb(114, 227, 235);
+}
+
+.message, .error {
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
 .error {
-color: darkred;
-background: lightcoral;
-font-size: 20px;
-border-style: solid;
-border-radius: 5px;
-padding: 10px;
-margin-bottom: 10px;
+  color: darkred;
+  background: lightcoral;
 }
 
 .message {
-    color: darkgreen;
-    background: lightgreen;
-    font-size: 20px;
-    border-style: solid;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-    }
+  color: darkgreen;
+  background: lightgreen;
+}
+
+#container {
+  max-width: 800px;
+  background-color: aquamarine;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+  padding: 40px;
+  border-radius: 20px;
+}
+
+#container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#container table td {
+  padding-bottom: 3px;
+}
+
+#container table td:last-child {
+  text-align: right;
+}
+
+.addPersonRow {
+  background-color: rgb(60, 255, 190);
+}
+
+.addPersonRow td {
+  padding: 5px !important;
+}
+
+#container table td:last-child {
+  padding-right: 5px;
+}
+
+@keyframes minttuswag {
+  0% {left: -500px;}
+  100% {left: 0;}
+}
+
+@keyframes minttubounce {
+  0% {left: 0;}
+  50% {left: 50px;}
+  100% {left: 0;}
+}
