@@ -22,16 +22,20 @@ const userExtractor = async (request, response, next) => {
     request.user = undefined
     return next()
   }
-  const decodedToken = jwt.verify(token, cfg.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "token missing or invalid" })
-  } 
-  const user = await User.findById(decodedToken.id)
-  if (user === null || user === undefined){
-    return response.status(401).json({ error: "user is not existing" })
+  try {
+    const decodedToken = await jwt.verify(token, cfg.SECRET)
+    if (!decodedToken.id) {
+      return response.status(401).json({ error: "token missing or invalid" })
+    } 
+    const user = await User.findById(decodedToken.id)
+    if (user === null || user === undefined){
+      return response.status(401).json({ error: "user is not existing" })
+    }
+    request.user = user
+    next()
+  } catch (error) {
+    next(error)
   }
-  request.user = user
-  next()
 }
 
 module.exports = {
