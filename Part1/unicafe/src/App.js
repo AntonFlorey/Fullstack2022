@@ -7,7 +7,7 @@ const FeedbackButton = ({text, onClick}) => {
     </button>
   )
 }
-
+  
 const Feedback = ({header, buttons}) => {
   return (
     <div>
