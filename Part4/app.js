@@ -10,6 +10,7 @@ const middleware = require("./middleware")
 const blogsRouter = require("./controllers/blog")
 const usersRouter = require("./controllers/user")
 const loginRouter = require("./controllers/login")
+const testingRouter = require("./controllers/testing")
 
 // connect to DB
 const mongoUrl = config.MONGODB_URI
@@ -17,7 +18,6 @@ mongoose.connect(mongoUrl).catch(err => {
   logger.error("error util works!")
   logger.error(err)
 })
-
 
 // set up middleware and controllers
 
@@ -27,6 +27,7 @@ app.use(middleware.tokenMiddleware)
 app.use("/api/blogs", middleware.userExtractor, blogsRouter)
 app.use("/api/users", usersRouter)
 app.use("/api/login", loginRouter)
+app.use("/api/testing", testingRouter)
 
 // set up a custom error handler
 const errorHandler = (error, request, response, next) => {
